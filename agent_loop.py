@@ -11,7 +11,7 @@ mcp = BuildingMCPServer()
 def run_agentic_loop():
     print("[*] Initializing Advanced Agentic MCP & Llama 3 Cognitive Engine...")
 
-    # Initialize Simulation Wrapper (Fixed filename to match weather_data.epw)
+    # Initialize Simulation Wrapper
     sim_wrapper = EnergyPlusWrapper("base_model.idf", "weather_data.epw")
     sim_wrapper.run_simulation()
 
@@ -20,24 +20,20 @@ def run_agentic_loop():
     tool_list = mcp.list_tools()
     print(f"[*] Available MCP Tools discovered by LLM: {[t['name'] for t in tool_list]}")
 
-    # LLM decides to invoke error-parsing tool via protocol
+    # LLM invokes error-parsing tool via protocol
     error_analysis = mcp.call_tool("parse_simulation_errors")
     print(f"[+] MCP Tool Output (Error Parser): {error_analysis}")
 
-    # Step 2: Closed-Loop Optimization Phase with Llama 3
+    # Step 2: Closed-Loop Optimization Phase with Llama 3 and MCP Live Metrics
     for step in range(1, 3):
         print(f"\n--- Agentic Optimization Step {step} ---")
 
-        metrics = sim_wrapper.get_latest_metrics()
-        telemetry = {
-            "zone_temperature": metrics["zone_temperature"] + (step * 0.05),
-            "energy_consumption": metrics["energy_consumption"] - (step * 0.02),
-            "cooling_setpoint": 24.5
-        }
+        # Fetch continuous metrics via MCP Server tool call (Closed-Loop Feedback)
+        live_telemetry = mcp.call_tool("get_live_metrics")
 
         prompt = f"""
         You are an autonomous AI Building Energy Agent connected via Model Context Protocol (MCP).
-        Telemetry: Zone Temp = {telemetry['zone_temperature']}°C, Energy = {telemetry['energy_consumption']} kWh.
+        Live Telemetry from MCP: Zone Temp = {live_telemetry['zone_temperature']}°C, Energy = {live_telemetry['energy_consumption_kwh']} kWh, PMV = {live_telemetry['pmv_thermal_comfort']}.
         System Health Check from MCP: {json.dumps(error_analysis)}
 
         Task: Determine the optimal cooling set-point and respond strictly in valid JSON format:
@@ -62,8 +58,14 @@ def run_agentic_loop():
             print(f"[+] Llama 3 Decision: {decision.get('recommended_setpoint')}°C")
             print(f"    Reasoning: {decision.get('reasoning')}")
 
-            # Forward injection and structural modification via eppy
-            sim_wrapper.update_setpoints(decision.get('recommended_setpoint', 24.5))
+            # Forward injection and structural modification via eppy & simulation wrapper
+            sim_wrapper.update_setpoints(decision.get('recommended_setpoint', 24.0))
+
+            # Log remediation task via MCP tool execution
+            mcp.call_tool("execute_remediation_task", {
+                "action_type": "Update Cooling Setpoint",
+                "details": f"Set to {decision.get('recommended_setpoint')}°C"
+            })
 
         except Exception as e:
             print(f"[-] Agent execution error: {e}")
