@@ -62,13 +62,13 @@ EnergyPlus output error files (eplusout.err) can contain thousands of lines of v
 Keyword Filtering: The parse_simulation_errors tool scans the log line-by-line, isolating entries with keywords Severe, Fatal, or Warning.
 Top Issue Truncation: Filters out repetitive diagnostic output and extracts only the top 5 critical issue lines to fit context window limits.
 Syntax Fallback Checks: If simulation log generation is pending, an automated fallback syntax validation executes to prevent pipeline interruption.
-<img width="864" height="708" alt="download" src="https://github.com/user-attachments/assets/92f3d1c0-1341-4572-951d-f4bafe33d78b" />
 
 ---
 
 7. Closed-Loop Execution Sequence
 
-
+<img width="864" height="708" alt="download" src="https://github.com/user-attachments/assets/92f3d1c0-1341-4572-951d-f4bafe33d78b" />
+   
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 863.983 708" width="863.983" height="708" style="--bg:#1F1F1F;--fg:#CCCCCC;--line:#CCCCCC;--accent:#0078D4;--muted:#CCCCCCCC;--surface:#181818;--border:#CCCCCC;background:var(--bg)">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
