@@ -32,6 +32,8 @@ Exposed MCP Tools:
 - execute_remediation_task: Logs and executes automated corrective actions.
 - get_live_metrics: Streams continuous real-time building performance telemetry.
 
+ ---
+
 
 
 4. Prompt Engineering Strategies
@@ -42,3 +44,14 @@ Exposed MCP Tools:
       "reasoning": "Lowering setpoint slightly improves PMV thermal comfort index while maintaining energy efficiency."
   }
 - Dynamic Context Grounding: Real-time telemetry values (Zone Temp, Energy Consumption, PMV Thermal Comfort) are injected directly into the user prompt window to prevent hallucinated decisions.
+
+  ---
+
+
+5. Prompt Latency Management
+To ensure real-time closed-loop control responsiveness:
+- LPU Hardware Acceleration: Employs llama-3.3-70b-versatile hosted on Groq LPU hardware, delivering sub-second completion latency.
+- Deterministic Temperature Tuning: Configured with temperature=0.3 to minimize token sampling variance and ensure consistent setpoint recommendations.
+- Optimized Token Footprint: Filters out redundant metadata to keep prompt payloads minimal, avoiding high latency during multi-step optimization loops.
+
+---
