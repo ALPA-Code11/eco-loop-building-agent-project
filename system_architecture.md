@@ -31,3 +31,14 @@ Exposed MCP Tools:
 - inspect_building_idf: Validates building structural configuration.
 - execute_remediation_task: Logs and executes automated corrective actions.
 - get_live_metrics: Streams continuous real-time building performance telemetry.
+
+
+
+4. Prompt Engineering Strategies
+- System Persona Framing: The system prompt grounds the AI model within a specific operational domain: "You are an autonomous AI Building Energy Agent connected via Model Context Protocol (MCP)."
+- Strict JSON Schema Enforcement: Uses response_format={"type": "json_object"} in model completions to guarantee valid structured outputs:
+  {
+      "recommended_setpoint": 24.0,
+      "reasoning": "Lowering setpoint slightly improves PMV thermal comfort index while maintaining energy efficiency."
+  }
+- Dynamic Context Grounding: Real-time telemetry values (Zone Temp, Energy Consumption, PMV Thermal Comfort) are injected directly into the user prompt window to prevent hallucinated decisions.
