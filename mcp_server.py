@@ -4,7 +4,7 @@ import json
 class BuildingMCPServer:
     """
     Model Context Protocol (MCP) Server for Smart Building Agents.
-    Exposes deterministic tools to the LLM for file parsing, error extraction, 
+    Exposes deterministic tools to the LLM for file parsing, error extraction,
     and runtime task execution without human code modification.
     """
     def __init__(self, idf_path="base_model.idf", log_path="eplusout.err"):
@@ -28,11 +28,6 @@ class BuildingMCPServer:
                 "name": "execute_remediation_task",
                 "description": "Executes system-level corrective actions based on extracted errors.",
                 "parameters": {"action_type": "string", "details": "string"}
-            },
-            {
-                "name": "get_live_metrics",
-                "description": "Fetches continuous real-time performance metrics (temperature, energy, PMV) for closed-loop control.",
-                "parameters": {}
             }
         ]
 
@@ -40,17 +35,15 @@ class BuildingMCPServer:
         """Executes the requested tool dynamically based on LLM decision."""
         if arguments is None:
             arguments = {}
-            
+
         print(f"\n[MCP Server] Tool invoked by Cognitive Engine -> `{tool_name}`")
-        
+
         if tool_name == "parse_simulation_errors":
             return self._parse_errors()
         elif tool_name == "inspect_building_idf":
             return self._inspect_idf()
         elif tool_name == "execute_remediation_task":
             return self._execute_task(arguments.get("action_type"), arguments.get("details"))
-        elif tool_name == "get_live_metrics":
-            return self._get_live_metrics()
         else:
             return {"error": f"Tool '{tool_name}' not found on MCP Server."}
 
@@ -90,15 +83,4 @@ class BuildingMCPServer:
         return {
             "status": "executed",
             "message": f"Successfully completed task: {action_type} without human code modification."
-        }
-
-    def _get_live_metrics(self):
-        """Internal helper to stream continuous performance metrics."""
-        print("[MCP Tool] Streaming live performance metrics from EnergyPlus runtime...")
-        return {
-            "status": "success",
-            "zone_temperature": 25.3,
-            "energy_consumption_kwh": 14.06,
-            "pmv_thermal_comfort": 0.65,
-            "carbon_intensity": 210.5
         }
