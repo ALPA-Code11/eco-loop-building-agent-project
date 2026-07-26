@@ -1,21 +1,5 @@
-How to Run the Streamlit Dashboard via Ngrok
+# Eco-Loop-Building-Agent
 
-1. **Start the Streamlit Dashboard:**
-   Open your terminal and run the dashboard app:
-   ```bash
-   streamlit run dashboard.py
-Configure Ngrok (First time only):
-
-Create a free account on Ngrok Dashboard.
-
-Copy your Authtoken from your ngrok account.
-
-Authenticate your ngrok agent in the terminal by running:
-
-Bash
-ngrok config add-authtoken YOUR_AUTHTOKEN_HERE
-Expose the Dashboard Publicly:
-Run ngrok to map port 8501 to a public URL:
-
-Bash
-ngrok http 8501
+## 🎥 PoC Demonstration Video
+You can watch the 3-minute live demonstration of the agent, simulation loop, and dashboard here:
+👉 **[Watch PoC Video on Loom](https://www.loom.com/share/1ef4b38d360d42b69b4570777cc89940)**
