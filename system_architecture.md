@@ -14,3 +14,19 @@ graph TD
     EppyEngine <--> IDFFile["Base Model (.idf)"]
     SimWrapper <--> EPlusBin["EnergyPlus Binary Engine"]
     EPlusBin <--> EPWFile["Weather File (.epw)"]
+
+
+3. Tool-Calling Architecture & MCP Integration
+
+The platform uses Model Context Protocol (MCP) to decouple LLM cognitive reasoning from low-level system operations:
+
+1. Tool Discovery: The agent discovers tools programmatically via mcp.list_tools().
+2. Deterministic Execution: Tools execute explicit Python methods rather than allowing raw unconstrained code execution by the LLM.
+3. Structured Telemetry Payload: MCP returns validated JSON responses containing zone temperature, energy consumption, and thermal comfort metrics.
+
+Exposed MCP Tools:
+
+- parse_simulation_errors: Scans EnergyPlus execution log streams.
+- inspect_building_idf: Validates building structural configuration.
+- execute_remediation_task: Logs and executes automated corrective actions.
+- get_live_metrics: Streams continuous real-time building performance telemetry.
